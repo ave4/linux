@@ -866,7 +866,6 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 	if (cpu_is_offline(cpu))
 		return 0;
 
-	pr_debug("adding CPU %u\n", cpu);
 
 #ifdef CONFIG_SMP
 	/* check whether a different CPU already registered this
@@ -1099,9 +1098,10 @@ static int __cpufreq_remove_dev(struct device *dev, struct subsys_interface *sif
 
 		free_cpumask_var(data->related_cpus);
 		free_cpumask_var(data->cpus);
+		pr_debug("policy %d is freed\n",data->cpu);
 		kfree(data);
 	} else {
-		pr_debug("%s: removing link, cpu: %d\n", __func__, cpu);
+		pr_debug("%s: removing link, cpu: %d policy[%d] %x\n", __func__, cpu,data->cpu,data);
 		cpufreq_cpu_put(data);
 		if (cpufreq_driver->target) {
 			__cpufreq_governor(data, CPUFREQ_GOV_START);
